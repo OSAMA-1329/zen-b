@@ -4,11 +4,18 @@ const mongoose = require("mongoose");
 const studentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "please add the user name"],
+    required: [true, "please add first name"],
+  },
+  lName: {
+    type: String,
+    required: [true, "please add last name"],
   },
   batch: {
     type: String,
     default: "B47-WD2 Tamil",
+  },
+  contactNo: {
+    type: String,
   },
   email: {
     type: String,

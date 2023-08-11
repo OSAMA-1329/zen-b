@@ -23,13 +23,13 @@ webcodeRouter.get("/student/webcode", async (req, res) => {
     if (!token) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
     // verifying the token
     const decodedToken = jwt.verify(token, SECRET);
 
     if (!decodedToken.id) {
-      return res.status(401).json({ error: "token invalid" });
+      return res.status(401).json({ message: "token invalid" });
     }
 
     //sending response data
@@ -43,7 +43,7 @@ webcodeRouter.get("/student/webcode", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on fetching data please login & try again" });
+      .json({ message: "Error on fetching data please login & try again" });
   }
 });
 
@@ -58,7 +58,7 @@ webcodeRouter.post("/student/webcode", async (req, res) => {
     const webcodes = await Webcode.find({});
 
     if (webcodes.length) {
-      return res.status(401).json({ error: "Already Submitted" });
+      return res.status(401).json({ message: "Already Submitted" });
     }
 
     //getting token
@@ -71,7 +71,7 @@ webcodeRouter.post("/student/webcode", async (req, res) => {
     if (!decodedToken.id) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
 
     //getting logged student to store webcode
@@ -99,7 +99,7 @@ webcodeRouter.post("/student/webcode", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on updating, please try again later" });
+      .json({ message: "Error on updating, please try again later" });
   }
 });
 

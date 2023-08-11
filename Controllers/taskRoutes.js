@@ -23,13 +23,13 @@ taskRouter.get("/student/task", async (req, res) => {
     if (!token) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
     // verifying the token
     const decodedToken = jwt.verify(token, SECRET);
 
     if (!decodedToken.id) {
-      return res.status(401).json({ error: "token invalid" });
+      return res.status(401).json({ message: "token invalid" });
     }
 
     //sending response data
@@ -41,7 +41,7 @@ taskRouter.get("/student/task", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on fetching data please login & try again" });
+      .json({ message: "Error on fetching data please login & try again" });
   }
 });
 
@@ -71,7 +71,7 @@ taskRouter.post("/student/task", async (req, res) => {
     if (!decodedToken.id) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
 
     //getting logged student to store task
@@ -80,7 +80,7 @@ taskRouter.post("/student/task", async (req, res) => {
     //checking task already submitted or not
     const matchedtask = await Task.findOne({ check });
     if (matchedtask) {
-      res.status(400).json({ Err: "Task already submitted" });
+      res.status(400).json({ message: "Task already submitted" });
       return;
     }
 
@@ -112,7 +112,7 @@ taskRouter.post("/student/task", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on updating, please try again later" });
+      .json({ message: "Error on updating, please try again later" });
   }
 });
 

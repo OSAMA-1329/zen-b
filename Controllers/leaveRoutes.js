@@ -23,13 +23,13 @@ leaveRouter.get("/student/leave", async (req, res) => {
     if (!token) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
     // verifying the token
     const decodedToken = jwt.verify(token, SECRET);
 
     if (!decodedToken.id) {
-      return res.status(401).json({ error: "token invalid" });
+      return res.status(401).json({ message: "token invalid" });
     }
 
     //sending response data
@@ -41,7 +41,7 @@ leaveRouter.get("/student/leave", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on fetching data please login & try again" });
+      .json({ message: "Error on fetching data please login & try again" });
   }
 });
 
@@ -62,7 +62,7 @@ leaveRouter.post("/student/leave", async (req, res) => {
     if (!decodedToken.id) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
 
     //getting logged student to store leave
@@ -90,7 +90,7 @@ leaveRouter.post("/student/leave", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on updating, please try again later" });
+      .json({ message: "Error on updating, please try again later" });
   }
 });
 
@@ -111,14 +111,14 @@ leaveRouter.delete("/student/leave/:id", async (req, res) => {
     if (!decodedToken.id) {
       return res
         .status(401)
-        .json({ error: "session timeout please login again" });
+        .json({ message: "session timeout please login again" });
     }
 
     // if leave not found throw error
 
     const matchedLeave = await Leave.findById(id);
     if (!matchedLeave) {
-      return res.status(401).json({ error: "Leave data not found" });
+      return res.status(401).json({ message: "Leave data not found" });
     }
 
     // deleting leave from collection
@@ -142,7 +142,7 @@ leaveRouter.delete("/student/leave/:id", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "Error on updating, please try again later" });
+      .json({ message: "Error on updating, please try again later" });
   }
 });
 

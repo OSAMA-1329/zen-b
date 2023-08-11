@@ -15,13 +15,13 @@ studentRouter.post("/student/signup", async (req, res) => {
     );
     //incase of any data missing throw error
     if (!name || !email || !password) {
-      res.status(400).json({ Err: "all fields are mandotary" });
+      res.status(400).json({ message: "all fields are mandotary" });
       return;
     }
 
     const matchedStudent = await Student.findOne({ email });
     if (matchedStudent) {
-      res.status(400).json({ Err: "Student already exists" });
+      res.status(400).json({ message: "Student already exists" });
       return;
     }
 
@@ -71,7 +71,46 @@ studentRouter.post("/student/signup", async (req, res) => {
       .json({ message: `account created successfully ${student.name}` });
     //
   } catch (error) {
-    return res.status(400).json({ Err: "Error on sign up please try again" });
+    return res
+      .status(400)
+      .json({ message: "Error on sign up please try again" });
+  }
+});
+
+/***************updating student profile*************/
+
+studentRouter.put("/student/update", async (req, res) => {
+  try {
+    const { email, name, lName, contactNo, qualification, experience } =
+      req.body;
+
+    const matchedStudent = await Student.findOne({ email });
+
+    // if student not exist throw error
+    if (!matchedStudent) {
+      res.status(400).json({
+        message: "please enter valid email / Entered mail not registered",
+      });
+      return;
+    }
+
+    // adding body content
+    matchedStudent.name = name;
+    matchedStudent.lName = lName;
+    matchedStudent.contactNo = contactNo;
+    matchedStudent.qualification = qualification;
+    matchedStudent.experience = experience;
+
+    await Student.findByIdAndUpdate(matchedStudent.id, matchedStudent);
+
+    //sending response
+    res.status(201).json({ message: `account updated successfully` });
+
+    //
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ message: "Error on updating please try again later" });
   }
 });
 
@@ -86,7 +125,7 @@ studentRouter.patch("/student/confirm/:id", async (req, res) => {
     if (matchedStudent === null || matchedStudent.resetToken === "") {
       return res
         .status(400)
-        .json({ err: "student not exists or link expired" });
+        .json({ message: "student not exists or link expired" });
     }
 
     //confirming and updating account
@@ -101,7 +140,9 @@ studentRouter.patch("/student/confirm/:id", async (req, res) => {
     });
     //
   } catch (error) {
-    return res.status(400).json({ Err: "student not exists or link expired" });
+    return res
+      .status(400)
+      .json({ message: "student not exists or link expired" });
   }
 });
 
@@ -116,7 +157,7 @@ studentRouter.put("/student/forgot", async (req, res) => {
     // if student not exist throw error
     if (!matchedStudent) {
       res.status(400).json({
-        Err: "please enter valid email / Entered mail not registered",
+        message: "please enter valid email / Entered mail not registered",
       });
       return;
     }
@@ -161,7 +202,9 @@ studentRouter.put("/student/forgot", async (req, res) => {
 
     //
   } catch (error) {
-    return res.status(500).json(error);
+    return res
+      .status(400)
+      .json({ message: "Error on updating please try again later" });
   }
 });
 
@@ -179,7 +222,7 @@ studentRouter.patch("/student/reset/:id", async (req, res) => {
     if (matchedStudent === "null" || matchedStudent.resetToken === "") {
       return res
         .status(400)
-        .json({ Err: "student not exists or reset link expired" });
+        .json({ message: "student not exists or reset link expired" });
     }
 
     // hasing the new password and update
@@ -200,7 +243,7 @@ studentRouter.patch("/student/reset/:id", async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ Err: "student not exists or reset link expired" });
+      .json({ message: "student not exists or reset link expired" });
   }
 });
 

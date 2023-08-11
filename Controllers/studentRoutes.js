@@ -10,9 +10,15 @@ studentRouter.post("/student/signup", async (req, res) => {
   //preparing object to store in collection
 
   try {
-    const { email, name, experience, qualification, password } = new Student(
-      req.body
-    );
+    const {
+      email,
+      name,
+      lName,
+      contactNo,
+      experience,
+      qualification,
+      password,
+    } = new Student(req.body);
     //incase of any data missing throw error
     if (!name || !email || !password) {
       res.status(400).json({ message: "all fields are mandotary" });
@@ -41,6 +47,8 @@ studentRouter.post("/student/signup", async (req, res) => {
       name,
       experience,
       qualification,
+      lName,
+      contactNo,
       password: hashedPassword,
       resetToken: randomString,
     });
@@ -81,8 +89,15 @@ studentRouter.post("/student/signup", async (req, res) => {
 
 studentRouter.put("/student/update", async (req, res) => {
   try {
-    const { email, name, lName, contactNo, qualification, experience } =
-      req.body;
+    const {
+      email,
+      name,
+      lName,
+      contactNo,
+      qualification,
+      experience,
+      password,
+    } = req.body;
 
     const matchedStudent = await Student.findOne({ email });
 
@@ -93,6 +108,8 @@ studentRouter.put("/student/update", async (req, res) => {
       });
       return;
     }
+    // hashed password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // adding body content
     matchedStudent.name = name;
@@ -100,6 +117,7 @@ studentRouter.put("/student/update", async (req, res) => {
     matchedStudent.contactNo = contactNo;
     matchedStudent.qualification = qualification;
     matchedStudent.experience = experience;
+    matchedStudent.password = hashedPassword;
 
     await Student.findByIdAndUpdate(matchedStudent.id, matchedStudent);
 

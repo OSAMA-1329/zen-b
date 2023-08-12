@@ -72,7 +72,7 @@ capstoneRouter.post("/student/capstone", async (req, res) => {
       "capstone"
     );
 
-    if (capstones.length) {
+    if (capstones.capstone.length) {
       return res.status(401).json({ message: "Already Submitted" });
     }
 

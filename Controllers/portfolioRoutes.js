@@ -72,7 +72,7 @@ portfolioRouter.post("/student/portfolio", async (req, res) => {
       "portfolio"
     );
 
-    if (portfolios.length) {
+    if (portfolios.portfolio.length) {
       return res.status(401).json({ message: "Already Submitted" });
     }
 

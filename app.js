@@ -32,7 +32,7 @@ mongoose
   });
 
 app.get("/", (req, res) => {
-  res.send("<h1>Welcome to Zen-Dashboard-DB</h1>");
+  res.send("Welcome to Zen-Dashboard");
 });
 
 app.use(studentRouter);

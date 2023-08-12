@@ -54,13 +54,6 @@ webcodeRouter.post("/student/webcode", async (req, res) => {
     //getting body content
     const { feUrl, feCode } = req.body;
 
-    //checking if already submitted
-    const webcodes = await Webcode.find({});
-
-    if (webcodes.length) {
-      return res.status(401).json({ message: "Already Submitted" });
-    }
-
     //getting token
     const token = getTokenFrom(req);
 
@@ -72,6 +65,15 @@ webcodeRouter.post("/student/webcode", async (req, res) => {
       return res
         .status(401)
         .json({ message: "session timeout please login again" });
+    }
+
+    //checking if already submitted
+    const webcodes = await Student.findById(decodedToken.id).populate(
+      "webcode"
+    );
+
+    if (webcodes.length) {
+      return res.status(401).json({ message: "Already Submitted" });
     }
 
     //getting logged student to store webcode

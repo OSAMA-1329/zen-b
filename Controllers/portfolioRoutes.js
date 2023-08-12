@@ -54,13 +54,6 @@ portfolioRouter.post("/student/portfolio", async (req, res) => {
     //getting body content
     const { portfolioURL, githubURL, resumeURL } = req.body;
 
-    //checking if already submitted
-    const portfolios = await Portfolio.find({});
-
-    if (portfolios.length) {
-      return res.status(401).json({ message: "Already Submitted" });
-    }
-
     //getting token
     const token = getTokenFrom(req);
 
@@ -72,6 +65,15 @@ portfolioRouter.post("/student/portfolio", async (req, res) => {
       return res
         .status(401)
         .json({ message: "session timeout please login again" });
+    }
+
+    //checking if already submitted
+    const portfolios = await Student.findById(decodedToken.id).populate(
+      "portfolio"
+    );
+
+    if (portfolios.length) {
+      return res.status(401).json({ message: "Already Submitted" });
     }
 
     //getting logged student to store portfolio

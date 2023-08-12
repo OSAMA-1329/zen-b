@@ -54,13 +54,6 @@ capstoneRouter.post("/student/capstone", async (req, res) => {
     //getting body content
     const { feUrl, beUrl, feCode, beCode } = req.body;
 
-    //checking if already submitted
-    const capstones = await Capstone.find({});
-
-    if (capstones.length) {
-      return res.status(401).json({ message: "Already Submitted" });
-    }
-
     //getting token
     const token = getTokenFrom(req);
 
@@ -72,6 +65,15 @@ capstoneRouter.post("/student/capstone", async (req, res) => {
       return res
         .status(401)
         .json({ message: "session timeout please login again" });
+    }
+
+    //checking if already submitted
+    const capstones = await Student.findById(decodedToken.id).populate(
+      "capstone"
+    );
+
+    if (capstones.length) {
+      return res.status(401).json({ message: "Already Submitted" });
     }
 
     //getting logged student to store capstone

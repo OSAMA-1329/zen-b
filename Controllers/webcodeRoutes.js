@@ -72,7 +72,7 @@ webcodeRouter.post("/student/webcode", async (req, res) => {
       "webcode"
     );
 
-    if (webcodes.length) {
+    if (webcodes.webcode) {
       return res.status(401).json({ message: "Already Submitted" });
     }
 

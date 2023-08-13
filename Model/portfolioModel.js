@@ -21,6 +21,10 @@ const portfolioSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    default: "Submitted",
+  },
+  comment: {
+    type: String,
     default: "Not yet reviewed",
   },
   submittedOn: {

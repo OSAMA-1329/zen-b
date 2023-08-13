@@ -37,9 +37,11 @@ const studentSchema = new mongoose.Schema({
   },
   codeKata: {
     type: String,
+    default: "0",
   },
   webKata: {
     type: String,
+    default: "0",
   },
   verified: {
     type: Boolean,
@@ -47,6 +49,7 @@ const studentSchema = new mongoose.Schema({
   },
   mockInterview: {
     type: String,
+    default: "0",
   },
   leave: [
     {
@@ -70,6 +73,18 @@ const studentSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Webcode",
+    },
+  ],
+  query: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Query",
+    },
+  ],
+  mock: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Mock",
     },
   ],
   task: [

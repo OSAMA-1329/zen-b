@@ -21,7 +21,7 @@ const capstoneSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    default: "pending",
+    default: "submitted",
   },
   feUrl: {
     type: String,

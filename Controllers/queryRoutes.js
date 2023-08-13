@@ -88,9 +88,7 @@ queryRouter.post("/student/query", async (req, res) => {
 
     //
   } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Error on updating, please try again later" });
+    return res.status(400).json({ message: "Please fill all data" });
   }
 });
 

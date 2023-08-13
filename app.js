@@ -17,7 +17,7 @@ const portfolioRouter = require("./Controllers/portfolioRoutes");
 const capstoneRouter = require("./Controllers/capstoneRoutes");
 const webcodeRouter = require("./Controllers/webcodeRoutes");
 const queryRouter = require("./Controllers/queryRoutes");
-const mockRouter = require("./Controllers/webcodeRoutes");
+const mockRouter = require("./Controllers/mockRoutes");
 
 app.use(express.json());
 app.use(cors());

@@ -16,6 +16,8 @@ const leaveRouter = require("./Controllers/leaveRoutes");
 const portfolioRouter = require("./Controllers/portfolioRoutes");
 const capstoneRouter = require("./Controllers/capstoneRoutes");
 const webcodeRouter = require("./Controllers/webcodeRoutes");
+const queryRouter = require("./Controllers/queryRoutes");
+const mockRouter = require("./Controllers/webcodeRoutes");
 
 app.use(express.json());
 app.use(cors());
@@ -42,5 +44,7 @@ app.use(leaveRouter);
 app.use(portfolioRouter);
 app.use(capstoneRouter);
 app.use(webcodeRouter);
+app.use(queryRouter);
+app.use(mockRouter);
 
 module.exports = app;

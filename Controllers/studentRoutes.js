@@ -122,7 +122,9 @@ studentRouter.put("/student/update", async (req, res) => {
     await Student.findByIdAndUpdate(matchedStudent.id, matchedStudent);
 
     //sending response
-    res.status(201).json({ message: `account updated successfully` });
+    res
+      .status(201)
+      .json({ message: `account updated successfully`, matchedStudent });
 
     //
   } catch (error) {

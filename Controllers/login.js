@@ -1,10 +1,9 @@
-const loginRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const Student = require("../Model/studentModel");
 const bcrypt = require("bcrypt");
 const { SECRET } = require("../utils/config");
 
-loginRouter.post("/student/login", async (req, res) => {
+const login = async (req, res) => {
   try {
     //getting email and password from student
     const { email, password } = req.body;
@@ -50,6 +49,8 @@ loginRouter.post("/student/login", async (req, res) => {
       .status(400)
       .json({ message: "Error on sign up please try again" });
   }
-});
+};
 
-module.exports = loginRouter;
+module.exports = {
+  login,
+};

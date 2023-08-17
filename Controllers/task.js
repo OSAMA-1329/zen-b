@@ -1,6 +1,5 @@
-const taskRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
-const { SECRET, BEURL } = require("../utils/config");
+const { SECRET } = require("../utils/config");
 const Student = require("../Model/studentModel");
 const Task = require("../Model/taskModel");
 
@@ -13,9 +12,9 @@ const getTokenFrom = (req) => {
   }
 };
 
-// fetching all task
+// fetching for task student one student
 
-taskRouter.get("/student/task", async (req, res) => {
+const fetchTask = async (req, res) => {
   try {
     //getting token of authorised student
 
@@ -43,11 +42,26 @@ taskRouter.get("/student/task", async (req, res) => {
       .status(400)
       .json({ message: "Error on fetching data please login & try again" });
   }
-});
+};
+
+// fetching for all tasks for evaluation
+
+const fetchAllTask = async (req, res) => {
+  try {
+    const tasks = await Task.find({});
+
+    res.status(200).json(tasks);
+    //
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ message: "Error on fetching data please login & try again" });
+  }
+};
 
 //posting new task
 
-taskRouter.post("/student/task", async (req, res) => {
+const postTask = async (req, res) => {
   try {
     //getting body content
     const {
@@ -114,6 +128,42 @@ taskRouter.post("/student/task", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating, please try again later" });
   }
-});
+};
 
-module.exports = taskRouter;
+//posting new task
+
+const updateTaskScore = async (req, res) => {
+  try {
+    //getting body content
+    const { id, score } = req.body;
+
+    //getting matchedtask to update store task
+    const matchedtask = await Task.findOne({ _id: id });
+
+    if (!matchedtask) {
+      res.status(400).json({ message: "Task not found or already evalauted" });
+      return;
+    }
+
+    // saving task score in collection
+    matchedtask.score = score;
+
+    await Task.findByIdAndUpdate(matchedtask.id, matchedtask);
+
+    //sending response
+    res.status(200).json({ message: "task score updated Succesfully" });
+
+    //
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ message: "Error on updating, please try again later" });
+  }
+};
+
+module.exports = {
+  fetchTask,
+  postTask,
+  updateTaskScore,
+  fetchAllTask,
+};

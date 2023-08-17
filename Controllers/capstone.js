@@ -1,4 +1,3 @@
-const capstoneRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../utils/config");
 const Student = require("../Model/studentModel");
@@ -15,7 +14,7 @@ const getTokenFrom = (req) => {
 
 // fetching all capstone
 
-capstoneRouter.get("/student/capstone", async (req, res) => {
+const fetchCapstone = async (req, res) => {
   try {
     //getting token of authorised student
 
@@ -45,11 +44,11 @@ capstoneRouter.get("/student/capstone", async (req, res) => {
       .status(400)
       .json({ message: "Error on fetching data please login & try again" });
   }
-});
+};
 
 //posting new capstone data
 
-capstoneRouter.post("/student/capstone", async (req, res) => {
+const postCapstone = async (req, res) => {
   try {
     //getting body content
     const { feUrl, beUrl, feCode, beCode } = req.body;
@@ -105,6 +104,9 @@ capstoneRouter.post("/student/capstone", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating, please try again later" });
   }
-});
+};
 
-module.exports = capstoneRouter;
+module.exports = {
+  fetchCapstone,
+  postCapstone,
+};

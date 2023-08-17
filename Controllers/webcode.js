@@ -1,8 +1,7 @@
-const mockRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../utils/config");
 const Student = require("../Model/studentModel");
-const Mock = require("../Model/mockModel");
+const Webcode = require("../Model/webcodeModel");
 
 //getting token function
 const getTokenFrom = (req) => {
@@ -13,9 +12,9 @@ const getTokenFrom = (req) => {
   }
 };
 
-// fetching all mock
+// fetching all webcode
 
-mockRouter.get("/student/mock", async (req, res) => {
+const fetchWebcode = async (req, res) => {
   try {
     //getting token of authorised student
 
@@ -34,30 +33,25 @@ mockRouter.get("/student/mock", async (req, res) => {
 
     //sending response data
 
-    const mocks = await Student.findById(decodedToken.id).populate("mock");
+    const webcodes = await Student.findById(decodedToken.id).populate(
+      "webcode"
+    );
 
-    res.status(200).json(mocks.mock);
+    res.status(200).json(webcodes.webcode);
     //
   } catch (error) {
     return res
       .status(400)
       .json({ message: "Error on fetching data please login & try again" });
   }
-});
+};
 
-//posting new mock
+//posting new webcode data
 
-mockRouter.post("/student/mock", async (req, res) => {
+const postWebcode = async (req, res) => {
   try {
     //getting body content
-    const {
-      interviewDate,
-      interviewerName,
-      interviewRound,
-      comment,
-      logicalScore,
-      overallScore,
-    } = req.body;
+    const { feUrl, feCode } = req.body;
 
     //getting token
     const token = getTokenFrom(req);
@@ -72,30 +66,35 @@ mockRouter.post("/student/mock", async (req, res) => {
         .json({ message: "session timeout please login again" });
     }
 
-    //getting logged student to store mock
+    //checking if already submitted
+    const webcodes = await Student.findById(decodedToken.id).populate(
+      "webcode"
+    );
+
+    if (webcodes.webcode.length) {
+      return res.status(401).json({ message: "Already Submitted" });
+    }
+
+    //getting logged student to store webcode
     const student = await Student.findById(decodedToken.id);
 
-    //prepare data to push into mock collection
-    const newMock = new Mock({
-      interviewDate,
-      interviewerName,
-      interviewRound,
-      comment,
-      logicalScore,
-      overallScore,
+    //prepare data to push into webcode collection
+    const newWebcode = new Webcode({
+      feUrl,
+      feCode,
       student: student._id,
     });
 
-    // saving new mock in collection
-    const savedMock = await newMock.save();
+    // saving new webcode in collection
+    const savedWebcode = await newWebcode.save();
 
-    //loading mock id to student collection
-    student.mock = student.mock.concat(savedMock._id);
+    //loading webcode id to student collection
+    student.webcode = student.webcode.concat(savedWebcode._id);
 
     await student.save();
 
     //sending response
-    res.status(200).json({ message: "mock submitted sucessfully" });
+    res.status(200).json({ message: "webcode submitted sucessfully" });
 
     //
   } catch (error) {
@@ -103,6 +102,9 @@ mockRouter.post("/student/mock", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating, please try again later" });
   }
-});
+};
 
-module.exports = mockRouter;
+module.exports = {
+  fetchWebcode,
+  postWebcode,
+};

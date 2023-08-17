@@ -1,4 +1,3 @@
-const studentRouter = require("express").Router();
 const Student = require("../Model/studentModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -6,7 +5,7 @@ const { EMAIL_ADDRESS, EMAIL_PASSWORD, FEURL } = require("../utils/config");
 
 /*****************sign up new student*********************/
 
-studentRouter.post("/student/signup", async (req, res) => {
+const signupStudent = async (req, res) => {
   //preparing object to store in collection
 
   try {
@@ -83,11 +82,11 @@ studentRouter.post("/student/signup", async (req, res) => {
       .status(400)
       .json({ message: "Error on sign up please try again" });
   }
-});
+};
 
 /***************updating student profile*************/
 
-studentRouter.put("/student/update", async (req, res) => {
+const updateStudent = async (req, res) => {
   try {
     const {
       email,
@@ -132,11 +131,11 @@ studentRouter.put("/student/update", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating please try again later" });
   }
-});
+};
 
 /**********confirming/authenticate student account*************/
 
-studentRouter.patch("/student/confirm/:id", async (req, res) => {
+const confirmStudent = async (req, res) => {
   try {
     const resetToken = req.params.id;
     const matchedStudent = await Student.findOne({ resetToken });
@@ -164,11 +163,11 @@ studentRouter.patch("/student/confirm/:id", async (req, res) => {
       .status(400)
       .json({ message: "student not exists or link expired" });
   }
-});
+};
 
 /***************Creating link for reseting password*************/
 
-studentRouter.put("/student/forgot", async (req, res) => {
+const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -226,11 +225,11 @@ studentRouter.put("/student/forgot", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating please try again later" });
   }
-});
+};
 
 /*******************reseting password**************************/
 
-studentRouter.patch("/student/reset/:id", async (req, res) => {
+const resetPassword = async (req, res) => {
   try {
     const { password } = req.body;
     const resetToken = req.params.id;
@@ -265,6 +264,12 @@ studentRouter.patch("/student/reset/:id", async (req, res) => {
       .status(400)
       .json({ message: "student not exists or reset link expired" });
   }
-});
+};
 
-module.exports = studentRouter;
+module.exports = {
+  signupStudent,
+  updateStudent,
+  confirmStudent,
+  forgotPassword,
+  resetPassword,
+};

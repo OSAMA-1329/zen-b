@@ -9,15 +9,15 @@ const { URL } = require("./utils/config");
 
 // getting all routers
 
-const loginRouter = require("./Controllers/loginRoutes");
-const studentRouter = require("./Controllers/studentRoutes");
-const taskRouter = require("./Controllers/taskRoutes");
-const leaveRouter = require("./Controllers/leaveRoutes");
-const portfolioRouter = require("./Controllers/portfolioRoutes");
-const capstoneRouter = require("./Controllers/capstoneRoutes");
-const webcodeRouter = require("./Controllers/webcodeRoutes");
-const queryRouter = require("./Controllers/queryRoutes");
-const mockRouter = require("./Controllers/mockRoutes");
+const loginRouter = require("./Routes/loginRoutes");
+const studentRouter = require("./Routes/studentRoutes");
+const taskRouter = require("./Routes/taskRoutes");
+const leaveRouter = require("./Routes/leaveRoutes");
+const portfolioRouter = require("./Routes/portfolioRoutes");
+const capstoneRouter = require("./Routes/capstoneRoutes");
+const webcodeRouter = require("./Routes/webcodeRoutes");
+const queryRouter = require("./Routes/queryRoutes");
+const mockRouter = require("./Routes/mockRoutes");
 
 app.use(express.json());
 app.use(cors());

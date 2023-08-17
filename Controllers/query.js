@@ -1,8 +1,7 @@
-const leaveRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../utils/config");
 const Student = require("../Model/studentModel");
-const Leave = require("../Model/leaveModel");
+const Query = require("../Model/queryModel");
 
 //getting token function
 const getTokenFrom = (req) => {
@@ -13,9 +12,9 @@ const getTokenFrom = (req) => {
   }
 };
 
-// fetching all leave
+// fetching all query
 
-leaveRouter.get("/student/leave", async (req, res) => {
+const fetchQuery = async (req, res) => {
   try {
     //getting token of authorised student
 
@@ -34,23 +33,23 @@ leaveRouter.get("/student/leave", async (req, res) => {
 
     //sending response data
 
-    const leaves = await Student.findById(decodedToken.id).populate("leave");
+    const querys = await Student.findById(decodedToken.id).populate("query");
 
-    res.status(200).json(leaves.leave);
+    res.status(200).json(querys.query);
     //
   } catch (error) {
     return res
       .status(400)
       .json({ message: "Error on fetching data please login & try again" });
   }
-});
+};
 
-//posting new leave
+//posting new query
 
-leaveRouter.post("/student/leave", async (req, res) => {
+const postQuery = async (req, res) => {
   try {
     //getting body content
-    const { reason, appliedOn } = req.body;
+    const { queryTitle, queryDesc } = req.body;
 
     //getting token
     const token = getTokenFrom(req);
@@ -65,36 +64,36 @@ leaveRouter.post("/student/leave", async (req, res) => {
         .json({ message: "session timeout please login again" });
     }
 
-    //getting logged student to store leave
+    //getting logged student to store query
     const student = await Student.findById(decodedToken.id);
 
-    //prepare data to push into leave collection
-    const newLeave = new Leave({
-      reason,
-      appliedOn,
+    //prepare data to push into query collection
+    const newQuery = new Query({
+      queryTitle,
+      queryDesc,
       student: student._id,
     });
 
-    // saving new leave in collection
-    const savedLeave = await newLeave.save();
+    // saving new query in collection
+    const savedQuery = await newQuery.save();
 
-    //loading leave id to student collection
-    student.leave = student.leave.concat(savedLeave._id);
+    //loading query id to student collection
+    student.query = student.query.concat(savedQuery._id);
 
     await student.save();
 
     //sending response
-    res.status(200).json({ message: "leave submitted sucessfully" });
+    res.status(200).json({ message: "query applied sucessfully" });
 
     //
   } catch (error) {
     return res.status(400).json({ message: "Please fill all data" });
   }
-});
+};
 
-//deleting leave
+//deleting query
 
-leaveRouter.delete("/student/leave/:id", async (req, res) => {
+const deleteQuery = async (req, res) => {
   try {
     //getting body content
     const id = req.params.id;
@@ -112,29 +111,29 @@ leaveRouter.delete("/student/leave/:id", async (req, res) => {
         .json({ message: "session timeout please login again" });
     }
 
-    // if leave not found throw error
+    // if query not found throw error
 
-    const matchedLeave = await Leave.findById(id);
-    if (!matchedLeave) {
-      return res.status(401).json({ message: "Leave data not found" });
+    const matchedQuery = await Query.findById(id);
+    if (!matchedQuery) {
+      return res.status(401).json({ message: "query data not found" });
     }
 
-    // deleting leave from collection
+    // deleting query from collection
 
-    await Leave.findByIdAndDelete(id);
+    await Query.findByIdAndDelete(id);
 
     //removing from student db
 
     await Student.findByIdAndUpdate(
       decodedToken.id,
       {
-        $pull: { leave: id },
+        $pull: { query: id },
       },
       { new: true }
     );
 
     //sending response
-    res.status(200).json({ message: "leave deleted sucessfully" });
+    res.status(200).json({ message: "query deleted sucessfully" });
 
     //
   } catch (error) {
@@ -142,6 +141,10 @@ leaveRouter.delete("/student/leave/:id", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating, please try again later" });
   }
-});
+};
 
-module.exports = leaveRouter;
+module.exports = {
+  fetchQuery,
+  postQuery,
+  deleteQuery,
+};

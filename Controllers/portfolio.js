@@ -1,4 +1,3 @@
-const portfolioRouter = require("express").Router();
 const jwt = require("jsonwebtoken");
 const { SECRET } = require("../utils/config");
 const Student = require("../Model/studentModel");
@@ -15,7 +14,7 @@ const getTokenFrom = (req) => {
 
 // fetching all portfolio
 
-portfolioRouter.get("/student/portfolio", async (req, res) => {
+const fetchPortfolio = async (req, res) => {
   try {
     //getting token of authorised student
 
@@ -45,11 +44,11 @@ portfolioRouter.get("/student/portfolio", async (req, res) => {
       .status(400)
       .json({ message: "Error on fetching data please login & try again" });
   }
-});
+};
 
 //posting new portfolio data
 
-portfolioRouter.post("/student/portfolio", async (req, res) => {
+const postPortfolio = async (req, res) => {
   try {
     //getting body content
     const { portfolioURL, githubURL, resumeURL } = req.body;
@@ -104,6 +103,9 @@ portfolioRouter.post("/student/portfolio", async (req, res) => {
       .status(400)
       .json({ message: "Error on updating, please try again later" });
   }
-});
+};
 
-module.exports = portfolioRouter;
+module.exports = {
+  fetchPortfolio,
+  postPortfolio,
+};

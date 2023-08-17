@@ -51,6 +51,10 @@ const studentSchema = new mongoose.Schema({
     type: String,
     default: "0",
   },
+  isMentor: {
+    type: Boolean,
+    default: false,
+  },
   leave: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -17,7 +17,7 @@ const signupStudent = async (req, res) => {
       experience,
       qualification,
       password,
-    } = new Student(req.body);
+    } = req.body;
     //incase of any data missing throw error
     if (!name || !email || !password) {
       res.status(400).json({ message: "all fields are mandotary" });
